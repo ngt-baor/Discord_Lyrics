@@ -51,13 +51,15 @@ function translateRuntimeMessage(message: string): string {
 
 function getDisplayLyrics(playbackState: PlaybackState): string {
     const currentLineText = playbackState.currentLine && playbackState.currentLine.text.trim()
+    const activeSource = (Settings.view as any).activeSource || "spotify"
 
     if (currentLineText) return playbackState.currentLine!.text
     if (playbackState.songName && playbackState.lyricsLoading) return "Đang kiểm tra lyric..."
     if (playbackState.songName && !playbackState.hasLyrics) return `\uD83C\uDFB6 ${playbackState.songName}`
     if (playbackState.songName && playbackState.hasLyrics) return "\uD83C\uDFB6"
+    if (!playbackState.songName) return activeSource === "ytmusic" ? "YouTube Music" : "Spotify"
 
-    return "ChÆ°a cÃ³"
+    return activeSource === "ytmusic" ? "YouTube Music" : "Spotify"
 }
 
 
@@ -123,12 +125,13 @@ async function init(): Promise<void> {
 
         const runtimeStatus = translateRuntimeMessage(playbackState.errorMessage)
         const displayLyrics = getDisplayLyrics(playbackState)
+        const currentLyrics = (playbackState.currentLine && playbackState.currentLine.text) || displayLyrics
         const fetchedFrom = lyricsFetcher.lastFetchedFrom === "Not fetched" ? "Chưa lấy" : lyricsFetcher.lastFetchedFrom
         const terminalText = `
     Bài hát: ${playbackState.songName || "Chưa phát nhạc"}
     Nghệ sĩ: ${playbackState.songAuthor || "Chưa phát nhạc"}
     Thời gian: ${statusChanger.formatSeconds(+(playbackState.songProgress / 1000).toFixed(0))}
-    Lyric hiện tại: ${(playbackState.currentLine && playbackState.currentLine.text) || "Chưa có"}
+    Lyric hiện tại: ${currentLyrics}
     Nguồn lyric: ${fetchedFrom}
     Trạng thái: ${runtimeStatus}
     `
@@ -142,7 +145,7 @@ async function init(): Promise<void> {
             lyricsLines: playbackState.lyrics ? playbackState.lyrics.lines : [],
             currentLineTime: playbackState.currentLine ? playbackState.currentLine.time : -1,
             lyricsDisplayBase: displayLyrics,
-            currentLyrics: (playbackState.currentLine && playbackState.currentLine.text) || "Chưa có",
+            currentLyrics,
             lyricsDisplay: displayLyrics,
             fetchedFrom,
             error: runtimeStatus,

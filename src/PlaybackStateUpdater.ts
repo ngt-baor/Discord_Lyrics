@@ -40,6 +40,7 @@ export class PlaybackStateUpdater {
     private useWindowsMediaOnly: boolean
     private lastApiProgress: number
     private lastApiUpdateTime: number
+    private lastActiveSource: string
 
     constructor(playbackState: PlaybackState, lyricsFetcher: LyricsFetcher) {
         this.playbackState = playbackState
@@ -48,11 +49,18 @@ export class PlaybackStateUpdater {
         this.useWindowsMediaOnly = false
         this.lastApiProgress = 0
         this.lastApiUpdateTime = 0
+        this.lastActiveSource = (Settings.view as any).activeSource || "spotify"
     }
 
     public async update(): Promise<void> {
         const roundTripTimeStart = Date.now()
         const activeSource = (Settings.view as any).activeSource || "spotify"
+        if (this.lastActiveSource !== activeSource) {
+            this.lastActiveSource = activeSource
+            const sourceName = activeSource === "ytmusic" ? "YouTube Music" : "Spotify/SpotX"
+            this.clearPlayback(`Waiting for ${sourceName} playback`)
+        }
+
         if (activeSource === "ytmusic") {
             await this.updateFromWindowsMedia("YouTube Music selected", "ytmusic")
             return
@@ -84,7 +92,7 @@ export class PlaybackStateUpdater {
             this.playbackState.errorMessage = ""
             const json = await request.json() as PlaybackResponse
             if (!json.item) {
-                this.clearPlayback()
+                this.clearPlayback("Spotify is not playing on an active device")
                 return
             }
 
@@ -157,12 +165,23 @@ export class PlaybackStateUpdater {
         })
     }
 
-    private clearPlayback(): void {
+    private clearPlayback(errorMessage: string): void {
+        this.playbackState.songName = ""
+        this.playbackState.songAuthor = ""
+        this.playbackState.oldSongId = this.playbackState.songId
+        this.playbackState.songId = ""
         this.playbackState.isPlaying = false
         this.playbackState.songProgress = 0
         this.playbackState.songDuration = 0
+        this.playbackState.lyrics = null
+        this.playbackState.currentLine = null
+        this.playbackState.hasLyrics = false
         this.playbackState.lyricsLoading = false
-        this.playbackState.errorMessage = "Spotify is not playing on an active device"
+        this.playbackState.errorMessage = errorMessage
+        this.lastApiProgress = 0
+        this.lastApiUpdateTime = Date.now()
+        this.lyricsFetcher.lastFetchedFor = ""
+        this.lyricsFetcher.lastFetchedFrom = "Not fetched"
     }
 
     private async loadLyricsForCurrentSong(): Promise<void> {
@@ -193,15 +212,13 @@ export class PlaybackStateUpdater {
         try {
             media = await WindowsMediaService.readPlayback(targetSource)
         } catch(e) {
-            this.clearPlayback()
-            this.playbackState.errorMessage = `${reason}; Windows media fallback failed: ${(e as Error).message}`
+            this.clearPlayback(`${reason}; Windows media fallback failed: ${(e as Error).message}`)
             return
         }
 
         if (!media.hasSession || !media.title) {
-            this.clearPlayback()
             const sourceName = targetSource === "ytmusic" ? "YouTube Music" : "Spotify/SpotX"
-            this.playbackState.errorMessage = `${reason}; Windows media fallback found no ${sourceName} session`
+            this.clearPlayback(`${reason}; Windows media fallback found no ${sourceName} session`)
             return
         }
 

@@ -1679,6 +1679,7 @@ let settings = {
 let settingsLoaded = false
 let lastRenderedSong = ""
 let lastRenderedSongLyricsCount = -1
+let lastRenderedSource = ""
 let lastActiveLineTime = -1
 
 userTokenInput.on("change", () => {
@@ -1954,9 +1955,10 @@ Nguồn lyric: ${source}
     // Update Spotify-style scrollable lyrics list
     const currentSongKey = song + " - " + artist
     const currentLyricsCount = playback.lyricsLines ? playback.lyricsLines.length : 0
-    if (currentSongKey !== lastRenderedSong || currentLyricsCount !== lastRenderedSongLyricsCount) {
+    if (currentSongKey !== lastRenderedSong || currentLyricsCount !== lastRenderedSongLyricsCount || activeSource !== lastRenderedSource) {
         lastRenderedSong = currentSongKey
         lastRenderedSongLyricsCount = currentLyricsCount
+        lastRenderedSource = activeSource
         lastActiveLineTime = -1
 
         lyricsScroller.empty()

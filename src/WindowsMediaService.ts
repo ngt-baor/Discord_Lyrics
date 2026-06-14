@@ -49,9 +49,6 @@ foreach ($candidate in $manager.GetSessions()) {
     }
 }
 if ($null -eq $session) {
-    $session = $manager.GetCurrentSession()
-}
-if ($null -eq $session) {
     [pscustomobject]@{ hasSession = $false } | ConvertTo-Json -Compress
     exit
 }
