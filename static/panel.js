@@ -4,10 +4,9 @@ $(
     <aside id="discord-panel">
         <nav class="server-rail" aria-label="Điều hướng nhanh">
             <div class="rail-logo"><img src="logo_discordlyric.png" alt="DiscordLyric"></div>
+            <div class="rail-divider"></div>
             <div class="rail-dot active"><img src="logo_spotify.svg" alt="Spotify"></div>
             <div class="rail-dot"><img src="logo_ytmusic.svg" alt="YouTube Music"></div>
-            <div class="rail-divider"></div>
-            <div class="rail-dot soft"></div>
         </nav>
 
         <section class="discord-home">
@@ -127,12 +126,26 @@ $(
 
     <section id="spotify-panel">
         <div class="spotify-topbar">
+            <div class="popup-artwork" aria-hidden="true">
+                <img src="logo_spotify.svg" alt="">
+            </div>
             <div>
                 <p class="kicker">Đang phát</p>
                 <h2 id="song-title">Chưa phát nhạc</h2>
                 <p id="song-artist">Mở Spotify hoặc SpotX để bắt đầu</p>
             </div>
-            <span id="play-state" class="spotify-state idle">Đang chờ</span>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <span id="play-state" class="spotify-state idle">Đang chờ</span>
+                <button id="toggle-mini-player" class="icon-button" title="Thu nhỏ thành pop-up" type="button">
+                    <svg class="shrink-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <rect x="13" y="13" width="8" height="8" rx="1" ry="1"></rect>
+                    </svg>
+                    <svg class="expand-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+                    </svg>
+                </button>
+            </div>
         </div>
 
         <section class="lyrics-stage">
@@ -284,6 +297,7 @@ $(
         background: linear-gradient(145deg, #5865f2, #3d46bd);
         font-weight: 900;
         letter-spacing: .5px;
+        cursor: pointer;
     }
 
     .rail-logo:has(img),
@@ -707,7 +721,7 @@ $(
         overflow: hidden;
         padding: 24px;
         background:
-            linear-gradient(180deg, rgba(18, 24, 21, .72), rgba(6, 7, 6, .98)),
+            linear-gradient(180deg, hsla(var(--dynamic-hue, 145), 25%, 10%, 0.72), hsla(var(--dynamic-hue, 145), 15%, 5%, 0.98)),
             var(--spotify-bg);
     }
 
@@ -721,6 +735,10 @@ $(
 
     .spotify-topbar .kicker {
         color: var(--spotify-muted);
+    }
+
+    .popup-artwork {
+        display: none;
     }
 
     .spotify-topbar h2 {
@@ -756,7 +774,7 @@ $(
         border-radius: 28px;
         border: 1px solid rgba(255, 255, 255, .09);
         background:
-            linear-gradient(135deg, rgba(31, 61, 48, .88), rgba(22, 34, 31, .92) 48%, rgba(12, 14, 13, .94)),
+            linear-gradient(135deg, hsla(var(--dynamic-hue, 145), 30%, 15%, 0.88), hsla(var(--dynamic-hue, 145), 20%, 10%, 0.92) 48%, hsla(var(--dynamic-hue, 145), 15%, 6%, 0.94)),
             #152019;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 28px 80px rgba(0, 0, 0, .35);
     }
@@ -771,8 +789,8 @@ $(
         min-height: 420px;
         border-radius: 50%;
         background:
-            radial-gradient(circle at 35% 35%, rgba(35, 209, 114, .5), rgba(35, 209, 114, .08) 38%, transparent 66%),
-            radial-gradient(circle at 60% 70%, rgba(88, 101, 242, .32), transparent 54%);
+            radial-gradient(circle at 35% 35%, hsla(var(--dynamic-hue, 145), 60%, 45%, 0.45), hsla(var(--dynamic-hue, 145), 50%, 25%, 0.08) 38%, transparent 66%),
+            radial-gradient(circle at 60% 70%, hsla(var(--dynamic-hue, 145), 65%, 40%, 0.3), transparent 54%);
         filter: blur(20px);
         opacity: .62;
         pointer-events: none;
@@ -1176,18 +1194,18 @@ $(
     }
     #spotify-panel.ytmusic-theme {
         background:
-            linear-gradient(180deg, rgba(28, 12, 12, .72), rgba(8, 4, 4, .98)),
+            linear-gradient(180deg, hsla(var(--dynamic-hue, 0), 25%, 10%, 0.72), hsla(var(--dynamic-hue, 0), 15%, 5%, 0.98)),
             #0a0808;
     }
     #spotify-panel.ytmusic-theme .lyrics-stage {
         background:
-            linear-gradient(135deg, rgba(61, 31, 31, .88), rgba(34, 22, 22, .92) 48%, rgba(14, 12, 12, .94)),
+            linear-gradient(135deg, hsla(var(--dynamic-hue, 0), 30%, 15%, 0.88), hsla(var(--dynamic-hue, 0), 20%, 10%, 0.92) 48%, hsla(var(--dynamic-hue, 0), 15%, 6%, 0.94)),
             #201515;
     }
     #spotify-panel.ytmusic-theme .lyric-orb {
         background:
-            radial-gradient(circle at 35% 35%, rgba(209, 35, 35, .5), rgba(209, 35, 35, .08) 38%, transparent 66%),
-            radial-gradient(circle at 60% 70%, rgba(88, 101, 242, .32), transparent 54%);
+            radial-gradient(circle at 35% 35%, hsla(var(--dynamic-hue, 0), 60%, 45%, 0.45), hsla(var(--dynamic-hue, 0), 50%, 25%, 0.08) 38%, transparent 66%),
+            radial-gradient(circle at 60% 70%, hsla(var(--dynamic-hue, 0), 65%, 40%, 0.3), transparent 54%);
     }
     #spotify-panel.ytmusic-theme #progress-fill {
         background: #ff0000;
@@ -1199,6 +1217,366 @@ $(
     }
     .rail-dot {
         cursor: pointer;
+    }
+
+    .icon-button {
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, .15);
+        background: rgba(255, 255, 255, .05);
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+        padding: 0;
+        outline: none;
+    }
+
+    .icon-button:hover {
+        background: rgba(255, 255, 255, .15);
+        border-color: rgba(255, 255, 255, .3);
+    }
+
+    body:not(.mini-mode) .expand-icon {
+        display: none !important;
+    }
+
+    body.mini-mode .shrink-icon {
+        display: none !important;
+    }
+
+    .lyrics-stage {
+        position: relative;
+    }
+
+    body.mini-mode #discord-panel {
+        display: none !important;
+    }
+
+    html.mini-mode,
+    body.mini-mode,
+    body.mini-mode #app-shell {
+        background: transparent !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+        -webkit-app-region: drag;
+    }
+
+    body.mini-mode #app-shell {
+        display: block !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        overflow: hidden !important;
+        padding: 0 !important;
+    }
+
+    body.mini-mode #spotify-panel {
+        position: relative !important;
+        display: grid !important;
+        grid-template-rows: auto minmax(0, 1fr) auto !important;
+        gap: 12px !important;
+        padding: 14px !important;
+        border-radius: 24px !important;
+        clip-path: inset(0 round 24px) !important;
+        transform: translateZ(0) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 -26px 70px rgba(0, 0, 0, 0.22) !important;
+        background:
+            radial-gradient(circle at 18% 14%, hsla(var(--dynamic-hue, 145), 55%, 46%, 0.32), transparent 34%),
+            linear-gradient(145deg, hsla(var(--dynamic-hue, 145), 42%, 18%, 0.92), hsla(var(--dynamic-hue, 145), 36%, 8%, 0.95) 58%, rgba(16, 18, 16, 0.96)) !important;
+        backdrop-filter: blur(22px) saturate(145%) !important;
+        -webkit-backdrop-filter: blur(22px) saturate(145%) !important;
+        overflow: hidden !important;
+        width: 100% !important;
+        height: 100vh !important;
+        min-height: 0 !important;
+    }
+
+    body.mini-mode #spotify-panel::after {
+        content: "";
+        position: absolute;
+        right: 8px;
+        bottom: 8px;
+        width: 15px;
+        height: 15px;
+        opacity: .36;
+        background:
+            linear-gradient(135deg, transparent 0 45%, rgba(255, 255, 255, .72) 45% 55%, transparent 55%),
+            linear-gradient(135deg, transparent 0 67%, rgba(255, 255, 255, .72) 67% 77%, transparent 77%);
+        pointer-events: none;
+        -webkit-app-region: no-drag;
+    }
+
+    body.mini-mode #spotify-panel.ytmusic-theme {
+        background:
+            radial-gradient(circle at 18% 14%, hsla(var(--dynamic-hue, 0), 70%, 48%, 0.30), transparent 34%),
+            linear-gradient(145deg, hsla(var(--dynamic-hue, 0), 42%, 18%, 0.92), hsla(var(--dynamic-hue, 0), 36%, 8%, 0.95) 58%, rgba(18, 12, 12, 0.96)) !important;
+    }
+
+    body.mini-mode .spotify-topbar {
+        grid-row: 1 !important;
+        display: grid !important;
+        grid-template-columns: 58px minmax(0, 1fr) 30px !important;
+        gap: 12px !important;
+        align-items: center !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        min-width: 0 !important;
+    }
+
+    body.mini-mode .spotify-topbar > div:nth-child(2) {
+        min-width: 0 !important;
+    }
+
+    body.mini-mode .spotify-topbar > div:last-child {
+        display: flex !important;
+        justify-content: flex-end !important;
+        min-width: 0 !important;
+    }
+
+    body.mini-mode .popup-artwork {
+        display: grid !important;
+        width: 58px !important;
+        height: 58px !important;
+        place-items: center !important;
+        border-radius: 14px !important;
+        background:
+            linear-gradient(145deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04)),
+            hsla(var(--dynamic-hue, 145), 44%, 24%, 0.62) !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 12px 34px rgba(0, 0, 0, 0.34) !important;
+        overflow: hidden !important;
+    }
+
+    body.mini-mode .popup-artwork img {
+        width: 32px !important;
+        height: 32px !important;
+        object-fit: contain !important;
+    }
+
+    body.mini-mode .lyrics-stage {
+        grid-row: 2 !important;
+        min-height: 0 !important;
+        height: 100% !important;
+        border-radius: 20px !important;
+        border: 1px solid rgba(255, 255, 255, 0.10) !important;
+        background: rgba(10, 12, 11, 0.34) !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+        overflow: hidden !important;
+    }
+
+    body.mini-mode .spotify-topbar .kicker {
+        display: none !important;
+    }
+
+    body.mini-mode #play-state {
+        display: none !important;
+    }
+
+    body.mini-mode #song-title {
+        font-size: 17px !important;
+        font-weight: 800 !important;
+        color: #fff !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: calc(100% - 40px) !important;
+    }
+
+    body.mini-mode #song-artist {
+        font-size: 13px !important;
+        color: rgba(255, 255, 255, 0.6) !important;
+        margin-top: 2px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: calc(100% - 40px) !important;
+    }
+
+    body.mini-mode .spotify-footer {
+        display: none !important;
+    }
+
+    body.mini-mode .lyrics-content {
+        padding: 16px !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+    }
+
+    body.mini-mode .lyric-label {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.8px !important;
+        color: rgba(255, 255, 255, 0.7) !important;
+        margin-bottom: 12px !important;
+    }
+
+    body.mini-mode .lyrics-scroller {
+        overflow: hidden !important;
+        padding: 8px 0 !important;
+        gap: 14px !important;
+        margin-bottom: 8px !important;
+        mask-image: linear-gradient(to bottom, transparent 0%, white 18%, white 82%, transparent 100%) !important;
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, white 18%, white 82%, transparent 100%) !important;
+        -webkit-app-region: no-drag;
+    }
+
+    body.mini-mode .icon-button {
+        -webkit-app-region: no-drag;
+        background: transparent !important;
+        border: none !important;
+        width: 28px !important;
+        height: 28px !important;
+        color: rgba(255, 255, 255, 0.7) !important;
+        opacity: 0.8;
+        transition: transform 0.2s ease, opacity 0.2s ease, color 0.2s ease !important;
+    }
+
+    body.mini-mode .icon-button:hover {
+        transform: scale(1.1) !important;
+        opacity: 1 !important;
+        color: #fff !important;
+        background: transparent !important;
+    }
+
+    body.mini-mode .lyric-line-item {
+        font-size: clamp(18px, 5vw, 24px) !important;
+        color: rgba(255, 255, 255, 0.4) !important;
+        opacity: 1 !important;
+        transform: none !important;
+        line-height: 1.18 !important;
+    }
+
+    body.mini-mode .lyric-line-item.active {
+        color: #ffffff !important;
+        transform: scale(1.02) !important;
+        text-shadow: 0 4px 12px rgba(255, 255, 255, 0.15) !important;
+    }
+
+    body.mini-mode .track-meta {
+        display: none !important;
+    }
+
+    body.mini-mode .progress-shell {
+        height: 4px !important;
+        margin-top: 2px !important;
+        border-radius: 2px !important;
+        background: rgba(255, 255, 255, 0.12) !important;
+    }
+
+    body.mini-mode #progress-fill {
+        background: #1db954 !important;
+    }
+
+    body.mini-mode #spotify-panel.ytmusic-theme #progress-fill {
+        background: #ff0000 !important;
+    }
+
+    body.mini-mode *::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+    body.mini-mode * {
+        scrollbar-width: none !important;
+    }
+
+    @media (max-width: 330px), (max-height: 220px) {
+        body.mini-mode #spotify-panel {
+            grid-template-rows: auto !important;
+            gap: 0 !important;
+            padding: 8px 10px !important;
+            border-radius: 14px !important;
+            clip-path: inset(0 round 14px) !important;
+        }
+
+        body.mini-mode .spotify-topbar {
+            grid-template-columns: 38px minmax(0, 1fr) 28px !important;
+            gap: 8px !important;
+        }
+
+        body.mini-mode .popup-artwork {
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 10px !important;
+        }
+
+        body.mini-mode .popup-artwork img {
+            width: 24px !important;
+            height: 24px !important;
+        }
+
+        body.mini-mode #song-title {
+            font-size: 13px !important;
+            line-height: 1.15 !important;
+            max-width: 100% !important;
+        }
+
+        body.mini-mode #song-artist {
+            font-size: 11px !important;
+            line-height: 1.15 !important;
+            max-width: 100% !important;
+        }
+
+        body.mini-mode .lyrics-stage {
+            display: none !important;
+        }
+
+        body.mini-mode #spotify-panel::after {
+            right: 5px;
+            bottom: 5px;
+            width: 10px;
+            height: 10px;
+        }
+    }
+
+    @media (max-height: 70px) {
+        body.mini-mode #spotify-panel {
+            padding: 8px 10px !important;
+            border-radius: 12px !important;
+            clip-path: inset(0 round 12px) !important;
+        }
+
+        body.mini-mode .spotify-topbar {
+            grid-template-columns: 34px minmax(0, 1fr) 24px !important;
+            gap: 8px !important;
+        }
+
+        body.mini-mode .popup-artwork {
+            width: 34px !important;
+            height: 34px !important;
+            border-radius: 9px !important;
+        }
+
+        body.mini-mode .popup-artwork img {
+            width: 22px !important;
+            height: 22px !important;
+        }
+
+        body.mini-mode #song-title {
+            font-size: 12px !important;
+            line-height: 1.05 !important;
+        }
+
+        body.mini-mode #song-artist {
+            display: none !important;
+        }
+
+        body.mini-mode .icon-button {
+            width: 24px !important;
+            height: 24px !important;
+        }
+
+        body.mini-mode #spotify-panel::after {
+            right: 4px;
+            bottom: 4px;
+            width: 8px;
+            height: 8px;
+        }
     }
 </style>
 `
@@ -1232,22 +1610,34 @@ const statusMini = $("#status-mini")
 
 const spotifyRailDot = $(".rail-dot:has(img[alt='Spotify'])")
 const ytmusicRailDot = $(".rail-dot:has(img[alt='YouTube Music'])")
+const popupArtworkImg = $(".popup-artwork img")
 
 spotifyRailDot.on("click", () => {
     if (settings.view.activeSource === "spotify") return
     settings.view.activeSource = "spotify"
-    spotifyRailDot.addClass("active")
-    ytmusicRailDot.removeClass("active")
-    $("#spotify-panel").removeClass("ytmusic-theme")
+    applySourceTheme("spotify")
     saveSettings()
 })
 
 ytmusicRailDot.on("click", () => {
     if (settings.view.activeSource === "ytmusic") return
     settings.view.activeSource = "ytmusic"
-    ytmusicRailDot.addClass("active")
-    spotifyRailDot.removeClass("active")
-    $("#spotify-panel").addClass("ytmusic-theme")
+    applySourceTheme("ytmusic")
+    saveSettings()
+})
+
+$(".rail-logo").on("click", () => {
+    if (!settingsLoaded) return
+    settings.view.discordEnabled = settings.view.discordEnabled !== false ? false : true
+    updateDiscordButtonState()
+    saveSettings()
+})
+
+$("#toggle-mini-player").on("click", () => {
+    if (!settingsLoaded) return
+    const isMini = settings.view.miniMode === true
+    settings.view.miniMode = !isMini
+    $("html, body").toggleClass("mini-mode", !isMini)
     saveSettings()
 })
 
@@ -1271,7 +1661,9 @@ let settings = {
             customEmoji: "🎶",
             customStatus: "[{timestamp}] Lời bài hát - {lyrics}"
         },
-        activeSource: "spotify"
+        activeSource: "spotify",
+        discordEnabled: true,
+        miniMode: false
     },
     timings: {
         sendTimeOffset: 200,
@@ -1435,8 +1827,40 @@ function saveSettings() {
     }))
 }
 
+function updateDiscordButtonState() {
+    const isEnabled = settings.view.discordEnabled !== false;
+    $(".rail-logo img").attr("src", isEnabled ? "logo_discordlyric.png" : "logo_discordlyric_red.png");
+}
+
+function applySourceTheme(source) {
+    const isYtMusic = source === "ytmusic"
+
+    spotifyRailDot.toggleClass("active", !isYtMusic)
+    ytmusicRailDot.toggleClass("active", isYtMusic)
+    $("#spotify-panel").toggleClass("ytmusic-theme", isYtMusic)
+    popupArtworkImg.attr("src", isYtMusic ? "logo_ytmusic.svg" : "logo_spotify.svg")
+    popupArtworkImg.attr("alt", isYtMusic ? "YouTube Music" : "Spotify")
+
+    if (isYtMusic) {
+        $(".spotify-topbar .kicker").text("ĐANG PHÁT (YT MUSIC)")
+        if ($("#song-artist").text().includes("Spotify")) {
+            $("#song-artist").text("Mở YouTube Music để bắt đầu")
+        }
+    } else {
+        $(".spotify-topbar .kicker").text("ĐANG PHÁT")
+        if ($("#song-artist").text().includes("YouTube Music")) {
+            $("#song-artist").text("Mở Spotify hoặc SpotX để bắt đầu")
+        }
+    }
+}
+
 function loadSettings(settingsToLoad) {
     settings = $.extend(true, settings, JSON.parse(settingsToLoad))
+
+    updateDiscordButtonState()
+
+    const isMiniMode = settings.view.miniMode || false;
+    $("html, body").toggleClass("mini-mode", isMiniMode);
 
     userTokenInput.val(settings.credentials.token)
     enableTimestampCheckbox.prop("checked", settings.view.timestamp)
@@ -1449,22 +1873,8 @@ function loadSettings(settingsToLoad) {
     autooffset.val(settings.timings.autooffset)
     setTokenState(settings.credentials.token ? "Token đã nhập" : "Chưa kiểm tra", "muted")
 
-    // Dynamic theme & sidebar icon switching
     const activeSource = settings.view.activeSource || "spotify"
-    $(".rail-dot:has(img[alt='Spotify'])").toggleClass("active", activeSource === "spotify")
-    $(".rail-dot:has(img[alt='YouTube Music'])").toggleClass("active", activeSource === "ytmusic")
-    $("#spotify-panel").toggleClass("ytmusic-theme", activeSource === "ytmusic")
-    if (activeSource === "ytmusic") {
-        $(".spotify-topbar .kicker").text("ĐANG PHÁT (YT MUSIC)")
-        if ($("#song-artist").text().includes("Spotify")) {
-            $("#song-artist").text("Mở YouTube Music để bắt đầu")
-        }
-    } else {
-        $(".spotify-topbar .kicker").text("ĐANG PHÁT")
-        if ($("#song-artist").text().includes("YouTube Music")) {
-            $("#song-artist").text("Mở Spotify hoặc SpotX để bắt đầu")
-        }
-    }
+    applySourceTheme(activeSource)
 
     if (settings.view.advanced.enabled) {
         enableAdvancedSWT.prop("checked", true)
@@ -1491,9 +1901,24 @@ function progressPercent(progress) {
 }
 
 function updatePlayback(playback) {
-    const activeSource = settings.view.activeSource || "spotify"
+    const activeSource = playback.source || settings.view.activeSource || "spotify"
+    applySourceTheme(activeSource)
     const song = playback.song || "Chưa phát nhạc"
     const artist = playback.author || (activeSource === "ytmusic" ? "Mở YouTube Music để bắt đầu" : "Mở Spotify hoặc SpotX để bắt đầu")
+
+    // Hashing function to generate beautiful HSL colors matching the song
+    if (playback.song && song !== "Chưa phát nhạc") {
+        const hashInput = song + " - " + artist;
+        let hash = 0;
+        for (let i = 0; i < hashInput.length; i++) {
+            hash = hashInput.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const hue = Math.abs(hash) % 360;
+        document.documentElement.style.setProperty("--dynamic-hue", hue.toString());
+    } else {
+        const defaultHue = activeSource === "ytmusic" ? "0" : "145";
+        document.documentElement.style.setProperty("--dynamic-hue", defaultHue);
+    }
     const lyric = playback.lyricsDisplay || playback.currentLyrics || "Chưa có lyric để hiển thị"
     const source = playback.fetchedFrom || "Chưa lấy"
     const progress = playback.progress || "0:00"

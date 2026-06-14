@@ -18,26 +18,48 @@ export class LrcLibSource extends BaseSource {
     private readonly baseUrl = "https://lrclib.net/api"
 
         public async getLyrics(name: string, artist: string): Promise<SongLyrics> {
-            const response = await fetch(
-                `${this.baseUrl}/get?track_name=${encodeURIComponent(name)}&artist_name=${encodeURIComponent(artist)}`,
-                {
-                    headers: {
-                        "User-Agent": "DiscordLyrics/1.0.0 (contact@discordlyrics.local)"
+            const cleanQuery = `${name} ${artist}`
+                .replace(/(?:^|[\s,])(?:và|&|feat\.?|ft\.?|with)(?=[\s,]|$)/gi, " ")
+                .replace(/\s*,\s*/g, " ")
+                .replace(/\s+/g, " ")
+                .trim()
+
+            const getUrl = `${this.baseUrl}/get?track_name=${encodeURIComponent(name)}&artist_name=${encodeURIComponent(artist)}`
+            const searchUrl = `${this.baseUrl}/search?q=${encodeURIComponent(cleanQuery)}`
+            const headers = {
+                "User-Agent": "DiscordLyrics/1.0.0 (contact@discordlyrics.local)"
+            }
+
+            // Fetch both in parallel to reduce response times
+            const [getRes, searchRes] = await Promise.allSettled([
+                fetch(getUrl, { headers }),
+                fetch(searchUrl, { headers })
+            ])
+
+            // 1. Try to use exact get result first
+            if (getRes.status === "fulfilled" && getRes.value.ok) {
+                try {
+                    const json = (await getRes.value.json()) as LyricsResponse
+                    if (json.syncedLyrics && json.syncedLyrics.trim()) {
+                        return this.normalizeLyrics(this.parseLyrics(json.syncedLyrics), name, artist)
                     }
-                }
-            )
+                } catch (e) {}
+            }
 
-            if (!response.ok) throw new Error(`Request failed: ${response.status}`)
+            // 2. Fallback to search result
+            if (searchRes.status === "fulfilled" && searchRes.value.ok) {
+                try {
+                    const results = (await searchRes.value.json()) as LyricsResponse[]
+                    if (results && results.length > 0) {
+                        const bestResult = results.find((r) => r.syncedLyrics && r.syncedLyrics.trim())
+                        if (bestResult && bestResult.syncedLyrics) {
+                            return this.normalizeLyrics(this.parseLyrics(bestResult.syncedLyrics), name, artist)
+                        }
+                    }
+                } catch (e) {}
+            }
 
-                const json = (await response.json()) as LyricsResponse
-
-                // Only if there are sync lyrics
-                if (!json.syncedLyrics || !json.syncedLyrics.trim()) {
-                    // Retrun nothing (this should switch to the next one right?)
-                    throw new Error("No synced lyrics found")
-                }
-
-                return this.normalizeLyrics(this.parseLyrics(json.syncedLyrics), name, artist)
+            throw new Error("No synced lyrics found on LrcLib")
         }
 
         /**

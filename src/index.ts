@@ -14,6 +14,8 @@ import { SpotifyService } from "./SpotifyService"
 import { v4 as uuidv4 } from "uuid"
 import { ExternalAuthServerAPI } from "./ExternalAuthServerAPI"
 
+let globalStatusChanger: StatusChanger | null = null
+
 Settings.load()
 
 if (Settings.update.enableAutoupdate) {
@@ -58,6 +60,22 @@ function getDisplayLyrics(playbackState: PlaybackState): string {
     return "ChÆ°a cÃ³"
 }
 
+
+export async function shutdown(): Promise<void> {
+    if (globalStatusChanger && Settings.credentials.token) {
+        Debug.write("Clearing Discord status before quit...")
+        try {
+            await Promise.race([
+                globalStatusChanger.clearStatusRequest(Settings.credentials.token),
+                new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 2000))
+            ])
+            Debug.write("Discord status cleared successfully.")
+        } catch (e) {
+            Debug.write("Failed to clear Discord status on shutdown: " + (e as Error).stack)
+        }
+    }
+}
+
 async function init(): Promise<void> {
     if (!Settings.credentials.uuid) {
         Settings.credentials.uuid = uuidv4()
@@ -85,6 +103,7 @@ async function init(): Promise<void> {
         .catch((e) => Debug.write("Initial playback update failed: " + e.stack))
 
     const statusChanger = new StatusChanger(playbackState)
+    globalStatusChanger = statusChanger
 
     setInterval(() => {
         playbackStateUpdater.update()
@@ -115,6 +134,7 @@ async function init(): Promise<void> {
     `
 
         broadcastPanelMessage("playback", {
+            source: (Settings.view as any).activeSource || "spotify",
             song: playbackState.songName || "Chưa phát nhạc",
             author: playbackState.songAuthor || "Chưa phát nhạc",
             progress: statusChanger.formatSeconds(+(playbackState.songProgress / 1000).toFixed(0)),

@@ -1,98 +1,218 @@
-# DiscordLyrics v1.0
+# DiscordLyrics v1.2
 
-DiscordLyrics là công cụ tự động đồng bộ và thay đổi trạng thái tùy chỉnh (custom status) trên Discord thành lời bài hát đang phát trên Spotify hoặc YouTube Music.
+DiscordLyrics là ứng dụng Windows giúp hiển thị lời bài hát đang phát lên Discord Custom Status. App đọc nhạc từ Spotify, SpotX hoặc YouTube Music thông qua Windows Media Session, lấy lyric từ các nguồn bên ngoài, rồi tự cập nhật trạng thái Discord theo thời gian.
 
-Ứng dụng chạy mượt mà trên Windows, tự động lấy thông tin bài hát đang phát qua Windows Media (SMTC) và cập nhật trạng thái Discord theo thời gian thực.
+Ứng dụng hiện không cần Spotify Developer API để hoạt động cơ bản. Bạn chỉ cần Discord token để gửi status.
 
----
+> Lưu ý bảo mật: Discord token là thông tin nhạy cảm. Không chia sẻ token, không commit `settings.json`, không gửi token lên GitHub.
 
-## 🚀 Hướng Dẫn Cài Đặt & Chạy Bằng File `.exe` (Không cần cài Node.js)
+## Tính Năng
 
-Dự án đã được đóng gói sẵn thành các tệp thực thi độc lập `.exe` giúp người dùng cuối có thể chạy ngay lập tức mà không cần cài đặt môi trường phát triển.
+- Đọc bài hát đang phát từ Spotify Desktop, SpotX hoặc YouTube Music.
+- Không yêu cầu Spotify Premium cho chế độ Windows Media fallback.
+- Lấy lyric từ nhiều nguồn: LRCLib, NetEase Music, QQ Music và cache cục bộ.
+- Cache lyric vào máy để lần sau đổi bài nhanh hơn.
+- Tự lọc các dòng metadata như composer, lyricist, producer, `作曲`, `作词`.
+- Gửi lyric hiện tại lên Discord Custom Status.
+- Nếu bài hát không có lyric, status hiển thị biểu tượng nhạc và tên bài.
+- Nếu đang ở đoạn intro hoặc đoạn nhạc không có lời, status hiển thị biểu tượng nhạc.
+- Tự xóa Discord status khi dừng nhạc hoặc tắt app.
+- Có giới hạn gửi Discord để giảm nguy cơ rate limit.
+- Tự đo độ trễ phản hồi Discord và có thể tự chỉnh độ trễ gửi.
+- Lưu token và toàn bộ setting vào `%APPDATA%\DiscordLyrics\settings.json`.
+- Giao diện tiếng Việt.
+- Giao diện chính dạng Discord + Spotify.
+- Pop-up nổi giống mini player, luôn nằm trên cùng.
+- Pop-up có thể kéo thả, resize tự do, min size `250x50`.
+- Icon pop-up tự đổi theo nguồn đang chạy: Spotify hoặc YouTube Music.
+- Thu nhỏ xuống system tray khi bấm nút đóng cửa sổ.
+- Có shortcut và icon app riêng khi đóng gói desktop.
 
-Có hai phiên bản đóng gói sẵn mà bạn có thể lựa chọn sử dụng:
+## Cài Đặt Cho Người Dùng
 
-### 1. Phiên bản Cửa sổ giao diện (Desktop App - Khuyên dùng)
-Phiên bản này có giao diện cửa sổ ứng dụng tích hợp sẵn bảng cấu hình và có thể thu nhỏ xuống khay hệ thống (System Tray).
+### Cách 1: Chạy bản desktop đã đóng gói
 
-*   **Bước 1**: Truy cập thư mục `desktop-release/win-unpacked/`.
-*   **Bước 2**: Nhấp đúp chuột vào tệp `DiscordLyrics.exe` (hoặc nhấp đúp vào file shortcut `desktop-release/DiscordLyrics.lnk`).
-*   **Bước 3**: Cửa sổ giao diện sẽ mở ra. Bạn nhập **Discord Token** vào ô cấu hình để bắt đầu.
-*   **Chạy nền**: Khi bấm nút đóng (X) cửa sổ, ứng dụng sẽ tự động ẩn xuống khay hệ thống (khay icon dưới góc phải màn hình) để tiếp tục cập nhật lyric chạy nền.
-*   **Thoát hoàn toàn**: Nhấp chuột phải vào icon ứng dụng trên khay hệ thống -> Chọn **Quit**.
+1. Tải hoặc mở thư mục bản build.
+2. Vào thư mục:
 
-> ⚠️ **Lưu ý quan trọng**: Không di chuyển riêng lẻ file `DiscordLyrics.exe` ra ngoài. Phải giữ nguyên cả thư mục `desktop-release/win-unpacked` hoặc sử dụng tệp Shortcut `DiscordLyrics.lnk` để chạy ứng dụng.
+```text
+desktop-release/win-unpacked/
+```
 
----
+3. Chạy file:
 
-### 2. Phiên bản Dòng lệnh (Console App)
-Phiên bản siêu nhẹ, hiển thị nhật ký chạy trực tiếp trong cửa sổ dòng lệnh.
+```text
+DiscordLyrics.exe
+```
 
-*   **Bước 1**: Truy cập thư mục `release/`.
-*   **Bước 2**: Nhấp đúp chuột vào tệp `DiscordLyrics.exe`. Một cửa sổ đen (Console) sẽ hiện lên và hiển thị nhật ký hoạt động.
-*   **Bước 3**: Mở trình duyệt web bất kỳ và truy cập địa chỉ:
-    ```text
-    http://localhost:8999
-    ```
-*   **Bước 4**: Bảng điều khiển cấu hình trực quan hiện ra, bạn dán **Discord Token** vào cấu hình và lưu lại.
-*   **Thoát ứng dụng**: Đóng cửa sổ dòng lệnh đen đang chạy.
+4. Dán Discord token vào ô `Token Discord`.
+5. Bấm `Kiểm tra`.
+6. Mở Spotify, SpotX hoặc YouTube Music và phát nhạc.
 
----
+Khi bấm nút `X`, app không tắt hẳn mà thu nhỏ xuống khay hệ thống. Muốn thoát hoàn toàn, bấm chuột phải vào icon tray và chọn `Quit`.
 
-## 🛠️ Hướng Dẫn Dành Cho Nhà Phát Triển (Chạy từ mã nguồn)
+### Cách 2: Chạy từ mã nguồn
 
-Nếu bạn muốn tùy chỉnh code hoặc chạy trực tiếp từ mã nguồn:
+Yêu cầu:
 
-### Yêu cầu hệ thống
-*   Node.js phiên bản 18 trở lên.
-*   Trình quản lý gói `npm`.
+- Windows 10 hoặc Windows 11.
+- Node.js 18 trở lên.
+- npm.
 
-### Cài đặt & Khởi chạy
-1.  Mở PowerShell tại thư mục dự án và chạy lệnh cài đặt thư viện:
-    ```powershell
-    npm install
-    ```
-2.  Biên dịch mã nguồn TypeScript:
-    ```powershell
-    npm run build
-    ```
-3.  Khởi chạy ứng dụng:
-    ```powershell
-    npm start
-    ```
-4.  Truy cập bảng điều khiển trên trình duyệt tại: `http://localhost:8999` để thiết lập.
+Cài thư viện:
 
-### Các lệnh đóng gói (Packaging)
-*   Đóng gói ra bản Console `.exe`:
-    ```powershell
-    npm run package:win
-    ```
-*   Đóng gói ra bản Desktop Electron:
-    ```powershell
-    npm run package:desktop
-    ```
+```powershell
+npm install
+```
 
----
+Build TypeScript:
 
-## ⚙️ Hướng Dẫn Cấu Hình Chi Tiết
+```powershell
+npm run build
+```
 
-### 1. Cấu hình Discord Token
-*   Để cập nhật trạng thái, ứng dụng cần **Discord Token** cá nhân của bạn.
-*   Dán token vào ô **Token Discord** trên bảng điều khiển và nhấn **Kiểm tra (Check)** để kết nối.
-*   ⚠️ **Bảo mật**: Tuyệt đối không chia sẻ Discord Token của bạn cho bất kỳ ai khác. File cấu hình cục bộ `settings.json` được lưu trên máy của bạn và sẽ chứa token này.
+Chạy app console:
 
-### 2. Chọn Nguồn Nhạc (Spotify hoặc YouTube Music)
-Ứng dụng hỗ trợ chuyển đổi nguồn trực quan ngay trên Sidebar phía bên trái:
-*   🟢 **Spotify**:
-    *   Mặc định tự động nhận nhạc chạy từ phần mềm **Spotify Desktop** hoặc **SpotX** trên Windows.
-    *   Hỗ trợ cấu hình Spotify Developer API (nhập Client ID/Secret) nếu muốn cập nhật trạng thái nhạc trực tiếp qua API chính chủ (yêu cầu Premium).
-*   🔴 **YouTube Music**:
-    *   Hỗ trợ tự động nhận diện từ phần mềm **YouTube Music Desktop App** (phổ biến từ th-ch trên GitHub) hoặc các trình duyệt web đang phát tab YouTube Music.
-    *   Khi nhấn chọn YouTube Music trên Sidebar, ứng dụng sẽ đổi giao diện sang tông màu đỏ và tự động dừng nhạc trên Spotify để phát YouTube Music.
+```powershell
+npm start
+```
 
-### 3. Tối Ưu Cân Chỉnh Lời Nhạc
-Trên bảng cấu hình, bạn có thể thiết lập:
-*   **Hiển thị thời gian lyric**: Thêm mốc thời gian trước lời nhạc (ví dụ: `[2:17]`).
-*   **Hiển thị nhãn lời bài hát**: Thêm tiền tố `Lời bài hát - ` trước status.
-*   **Mẫu status riêng (Advanced)**: Tự tạo mẫu hiển thị tùy chỉnh bằng các từ khóa như `{lyrics}`, `{timestamp}`, `{song_name}`, `{song_author}`.
-*   **Tự động cân chỉnh độ trễ (Auto Offset)**: Tự động đo độ trễ mạng tới Discord API để căn thời gian gửi lời nhạc lên sớm hoặc muộn hơn, giúp lời nhạc hiển thị chuẩn xác nhất mà không bị Discord giới hạn tần suất (Rate Limit).
+Mở bảng điều khiển:
+
+```text
+http://localhost:8999
+```
+
+Chạy bản desktop khi phát triển:
+
+```powershell
+npm run desktop
+```
+
+Đóng gói bản desktop:
+
+```powershell
+npm run package:desktop
+```
+
+Đóng gói bản console:
+
+```powershell
+npm run package:win
+```
+
+## Luồng Chạy Của Ứng Dụng
+
+1. App khởi động server nội bộ tại `http://localhost:8999`.
+2. Giao diện panel kết nối WebSocket tới server nội bộ.
+3. App đọc setting từ:
+
+```text
+%APPDATA%\DiscordLyrics\settings.json
+```
+
+4. Người dùng chọn nguồn nhạc: Spotify hoặc YouTube Music.
+5. App đọc bài hát đang phát qua Windows Media Session.
+6. Khi phát hiện bài mới, app xóa lyric cũ và bắt đầu tìm lyric mới.
+7. `LyricsFetcher` kiểm tra cache trước.
+8. Nếu cache chưa có, app gọi song song các nguồn lyric.
+9. Lyric được chuẩn hóa, lọc metadata và lưu lại vào cache.
+10. `StatusChanger` tính dòng lyric hiện tại dựa trên thời gian bài hát và độ trễ gửi.
+11. Nếu cần đổi status, app gửi request tới Discord.
+12. UI nhận playback qua WebSocket và cập nhật tên bài, nghệ sĩ, lyric, progress, nguồn lyric và trạng thái gửi Discord.
+13. Khi pause, stop hoặc thoát app, app gửi yêu cầu xóa Discord Custom Status.
+
+## Cách Dùng
+
+### Kết nối Discord
+
+1. Mở app.
+2. Dán Discord token vào ô `Token Discord`.
+3. Bấm `Kiểm tra`.
+4. Nếu trạng thái báo đã kết nối, app có thể cập nhật Discord Custom Status.
+
+Token chỉ được lưu trên máy của bạn trong file setting cục bộ. Không commit file này lên Git.
+
+### Chọn nguồn nhạc
+
+Ở thanh icon bên trái:
+
+- Chọn icon Spotify để đọc Spotify hoặc SpotX.
+- Chọn icon YouTube Music để đọc YouTube Music.
+
+Khi đổi nguồn, giao diện và icon pop-up sẽ đổi theo nguồn đang chạy.
+
+### Dùng pop-up
+
+1. Bấm nút thu nhỏ ở góc phải khu vực đang phát.
+2. App chuyển sang cửa sổ pop-up nhỏ.
+3. Kéo pop-up đến vị trí mong muốn.
+4. Kéo góc dưới phải để resize.
+5. Bấm icon mở rộng để quay lại panel đầy đủ.
+
+Kích thước nhỏ nhất của pop-up là `250x50`.
+
+### Chỉnh độ trễ
+
+`Độ trễ gửi (ms)` là thời gian app gửi lyric sớm hơn hoặc muộn hơn so với timestamp lyric.
+
+Ví dụ:
+
+- `200ms` nghĩa là gửi sớm khoảng 0.2 giây.
+- `500ms` nghĩa là gửi sớm khoảng 0.5 giây.
+
+Discord có độ trễ riêng, nên đặt `1ms` không có nghĩa là status sẽ hiện tức thì. Mức thực tế nên dùng thường là `200ms` đến `500ms`.
+
+### Giới hạn gửi Discord
+
+`Giới hạn gửi Discord` là khoảng cách tối thiểu giữa hai lần đổi status. Tính năng này giúp giảm nguy cơ bị Discord rate limit khi lyric đổi quá nhanh.
+
+## Cấu Trúc Thư Mục Quan Trọng
+
+```text
+src/
+  desktop.ts              Electron desktop window, tray, mini pop-up
+  index.ts                Luồng chạy chính
+  Settings.ts             Lưu và đọc setting
+  PlaybackState.ts        Trạng thái bài hát hiện tại
+  PlaybackStateUpdater.ts Đọc nhạc từ Spotify API hoặc Windows Media
+  LyricsFetcher.ts        Tìm lyric, cache lyric
+  StatusChanger.ts        Tính lyric hiện tại và gửi Discord status
+  WindowsMediaService.ts  Đọc phiên media từ Windows
+  Sources/                Các nguồn lyric
+  Panel/Server.ts         Server Express và WebSocket
+
+static/
+  panel.js                Giao diện panel và pop-up
+  index.html              Trang panel
+  logo_*.svg/png          Icon giao diện
+
+assets/
+  icon.ico                Icon app
+
+scripts/
+  update-exe-icon.js
+  create-desktop-shortcut.ps1
+```
+
+## File Không Được Đẩy Lên Git
+
+Các file/thư mục sau chứa dữ liệu cá nhân hoặc build output, đã được `.gitignore` chặn:
+
+```text
+settings.json
+desktop-release/
+dist/
+release/
+node_modules/
+cache/
+log.txt
+```
+
+Không dùng `git add -f` với các file trên.
+
+## Ghi Chú Bảo Mật
+
+DiscordLyrics sử dụng Discord token cá nhân để cập nhật custom status. Hãy tự chịu trách nhiệm khi sử dụng token cá nhân và chỉ chạy app trên máy của bạn.
+
+Nếu lỡ commit token lên GitHub, hãy đổi token ngay bằng cách đăng xuất toàn bộ phiên Discord hoặc đổi mật khẩu Discord.

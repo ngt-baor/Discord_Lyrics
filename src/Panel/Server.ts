@@ -82,12 +82,21 @@ export function startServer(): void {
             const oldActiveSource = (Settings.view as any).activeSource || "spotify"
             const newActiveSource = settings.view.activeSource || "spotify"
 
+            const oldMiniMode = (Settings.view as any).miniMode || false
+            const newMiniMode = settings.view.miniMode || false
+
             Settings.credentials = settings.credentials
             Settings.view = settings.view
             Settings.timings = settings.timings
             Settings.update = settings.update
 
             Settings.save()
+
+            if (oldMiniMode !== newMiniMode) {
+                if (typeof (global as any).toggleMiniMode === "function") {
+                    (global as any).toggleMiniMode(newMiniMode)
+                }
+            }
 
             if (oldActiveSource !== newActiveSource) {
                 // Switch media playback!

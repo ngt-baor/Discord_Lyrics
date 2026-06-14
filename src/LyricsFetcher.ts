@@ -74,7 +74,7 @@ export class LyricsFetcher {
     public lastFetchedFor: string
 
     private readonly cacheDir: string
-    private readonly sourceTimeoutMs = 4000
+    private readonly sourceTimeoutMs = 15000
 
     constructor() {
         this.sources = []
@@ -88,7 +88,7 @@ export class LyricsFetcher {
         this.sources.push(source)
     }
 
-    public async fetchLyrics(name: string, artist: string): Promise<SongLyrics | null> {
+    public async fetchLyrics(name: string, artist: string, activeSource: string = "spotify", isFallback: boolean = false): Promise<SongLyrics | null> {
         name = cleanSongName(name.normalize("NFC").trim())
         artist = artist.normalize("NFC").trim()
         this.lastFetchedFrom = "Not fetched"
@@ -97,12 +97,40 @@ export class LyricsFetcher {
         const cache = this.fetchCachedLyrics(name, artist)
 
         if (cache) {
-            this.lastFetchedFrom = `Cache (${cache.appName})`
+            let isCacheValid = false
+            if (activeSource === "spotify") {
+                if (isFallback) {
+                    isCacheValid = cache.appName !== "Spotify"
+                } else {
+                    isCacheValid = cache.appName === "Spotify"
+                }
+            } else {
+                isCacheValid = cache.appName !== "Spotify"
+            }
 
-            return cache
+            if (isCacheValid) {
+                this.lastFetchedFrom = `Cache (${cache.appName})`
+
+                return cache
+            }
         }
 
         for (const source of this.sources) {
+            const appName = source.getAppName()
+            let shouldTrySource = false
+
+            if (activeSource === "spotify") {
+                if (isFallback) {
+                    shouldTrySource = appName !== "Spotify"
+                } else {
+                    shouldTrySource = appName === "Spotify"
+                }
+            } else {
+                shouldTrySource = appName !== "Spotify"
+            }
+
+            if (!shouldTrySource) continue
+
             try {
                 const result = await this.fetchFromSource(source, name, artist)
                 this.lastFetchedFrom = result.appName

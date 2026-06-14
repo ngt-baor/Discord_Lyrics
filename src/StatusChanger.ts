@@ -169,6 +169,11 @@ export class StatusChanger {
 
         if (!Settings.credentials.token) return
 
+        if (!Settings.view.discordEnabled) {
+            this.clearStatusOnce()
+            return
+        }
+
         if (playbackState.ended || !playbackState.isPlaying) {
             this.clearStatusOnce()
             return

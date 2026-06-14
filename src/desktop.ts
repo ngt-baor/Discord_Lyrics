@@ -1,11 +1,25 @@
 import { app, BrowserWindow, Menu, shell, Tray } from "electron"
 import { join } from "node:path"
-import "./index"
+import { Settings } from "./Settings"
+import { shutdown } from "./index"
 
 let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
 let isQuitting = false
+let normalBounds: any = null
 const appUserModelId = "local.discordlyrics.desktop"
+
+;(global as any).toggleMiniMode = (enabled: boolean) => {
+    if (mainWindow) {
+        const isCurrentlyMini = mainWindow.isAlwaysOnTop()
+        if (!isCurrentlyMini && enabled) {
+            normalBounds = mainWindow.getBounds()
+        }
+        mainWindow.destroy()
+        mainWindow = null
+    }
+    createWindow()
+}
 
 function getIconPath(): string {
     if (app.isPackaged) {
@@ -16,14 +30,22 @@ function getIconPath(): string {
 }
 
 function createWindow(): void {
+    const isMini = (Settings.view as any).miniMode || false
     mainWindow = new BrowserWindow({
-        width: 1120,
-        height: 680,
-        minWidth: 900,
-        minHeight: 560,
+        width: isMini ? 380 : (normalBounds?.width || 1120),
+        height: isMini ? 360 : (normalBounds?.height || 680),
+        x: isMini ? undefined : normalBounds?.x,
+        y: isMini ? undefined : normalBounds?.y,
+        minWidth: isMini ? 250 : 900,
+        minHeight: isMini ? 50 : 560,
+        alwaysOnTop: isMini,
+        frame: !isMini,
+        transparent: isMini,
+        resizable: true,
+        hasShadow: !isMini,
         title: "DiscordLyrics",
         icon: getIconPath(),
-        backgroundColor: "#202124",
+        backgroundColor: isMini ? "#00000000" : "#202124",
         autoHideMenuBar: true,
         webPreferences: {
             contextIsolation: true,
@@ -43,9 +65,10 @@ function createWindow(): void {
         mainWindow?.hide()
     })
 
+    const delay = normalBounds ? 0 : 800
     setTimeout(() => {
         mainWindow?.loadURL("http://127.0.0.1:8999")
-    }, 800)
+    }, delay)
 }
 
 function showMainWindow(): void {
@@ -65,8 +88,13 @@ function createTray(): void {
         },
         {
             label: "Quit",
-            click: () => {
+            click: async () => {
                 isQuitting = true
+                try {
+                    await shutdown()
+                } catch (e) {
+                    // Ignore errors
+                }
                 app.quit()
             }
         }

@@ -35,7 +35,9 @@ export class Settings {
             customEmoji: "\uD83C\uDFB6",
             customStatus: "[{timestamp}] [{lyrics}]"
         },
-        activeSource: "spotify"
+        activeSource: "spotify",
+        discordEnabled: true,
+        miniMode: false
     }
 
     public static timings = {

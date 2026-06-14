@@ -176,7 +176,9 @@ export class PlaybackStateUpdater {
         playbackState.currentLine = null
         playbackState.hasLyrics = false
 
-        const lyrics = await this.lyricsFetcher.fetchLyrics(songName, songAuthor)
+        const activeSource = (Settings.view as any).activeSource || "spotify"
+        const isFallback = songId.includes(":")
+        const lyrics = await this.lyricsFetcher.fetchLyrics(songName, songAuthor, activeSource, isFallback)
 
         if (playbackState.songId !== songId) return
 
