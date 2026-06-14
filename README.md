@@ -22,9 +22,11 @@ DiscordLyrics là ứng dụng Windows giúp hiển thị lời bài hát đang 
 - Lưu token và toàn bộ setting vào `%APPDATA%\DiscordLyrics\settings.json`.
 - Giao diện tiếng Việt.
 - Giao diện chính dạng Discord + Spotify.
-- Pop-up nổi giống mini player, luôn nằm trên cùng.
-- Pop-up có thể kéo thả, resize tự do, min size `250x50`.
-- Icon pop-up tự đổi theo nguồn đang chạy: Spotify hoặc YouTube Music.
+- Pop-up nổi thiết kế hình vuông tối giản chuẩn Spotify (`330x330`), luôn nằm trên cùng (Always on Top).
+- Pop-up tự động ẩn toàn bộ thanh cuộn, thanh tiến trình siêu mỏng và các nút phẳng tự phóng to nhẹ khi di chuột.
+- Nền của pop-up tự động thay đổi màu sắc mượt mà (Dynamic HSL Gradient) theo tông màu của từng bài hát.
+- Watermark nền của pop-up tự động chuyển đổi tương ứng khi chuyển nguồn phát (Spotify hoặc YouTube Music).
+- Pop-up có thể kéo thả di chuyển dễ dàng trên màn hình.
 - Thu nhỏ xuống system tray khi bấm nút đóng cửa sổ.
 - Có shortcut và icon app riêng khi đóng gói desktop.
 
