@@ -21,10 +21,7 @@ DiscordLyrics là ứng dụng Windows giúp hiển thị lời bài hát đang 
 
 ## Cài Đặt
 
-### Yêu cầu:
 
-- Windows 10 hoặc Windows 11.
-- Cài [Node.js](https://nodejs.org/en).
 
 ### Cách 1: Dành cho người sử dụng phổ thông
 
@@ -38,6 +35,11 @@ DiscordLyrics là ứng dụng Windows giúp hiển thị lời bài hát đang 
 Khi bấm nút `X`, app không tắt hẳn mà thu nhỏ xuống khay hệ thống. Muốn thoát hoàn toàn, bấm chuột phải vào icon tray và chọn `Quit`.
 
 ### Cách 2: Dành cho dev
+
+Yêu cầu:
+
+- Windows 10 hoặc Windows 11.
+- Cài [Node.js](https://nodejs.org/en).
 
 Cài thư viện:
 
@@ -102,6 +104,14 @@ npm run package:win
 12. UI nhận playback qua WebSocket và cập nhật tên bài, nghệ sĩ, lyric, progress, nguồn lyric và trạng thái gửi Discord.
 13. Khi pause, stop hoặc thoát app, app gửi yêu cầu xóa Discord Custom Status.
 
+## Cách Lấy Discord Token
+
+1. Mở discord.com/app trên trình duyệt (không phải app discord)
+2. Nhấn F12 để mở DevTools → chọn Network
+3. Thực hiện bất kỳ hành động nào (mở chat, gửi tin nhắn, v.v.)
+4. Nhấp vào hành động bất kì → Request Headers → Tìm Authorization
+5. Copy — dán vào ô token
+
 ## Cách Dùng
 
 ### Kết nối Discord
@@ -149,6 +159,11 @@ Nên để chế độ Tự động chỉnh độ trễ gửi
 
 `Giới hạn gửi Discord` là khoảng cách tối thiểu giữa hai lần đổi status. Tính năng này giúp giảm nguy cơ bị Discord rate limit khi lyric đổi quá nhanh.
 
+Khuyên Dùng:
+1. Bật tự chỉnh Độ Trễ Gửi
+2. Giới hạn gửi Discord nên để 700 ~ 1200
+3. Tính trung Bình: 3 ~ 6
+4. hạn chế dùng icon (tùy dùng cũng được chỉ là khuyên không nên dùng)
 
 ## Ghi Chú Bảo Mật
 
