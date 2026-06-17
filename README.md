@@ -41,15 +41,6 @@ Bạn không cần cài Node.js nếu chỉ muốn dùng app.
    - Icon YouTube Music: dùng cho YouTube Music.
 8. Mở app nhạc và phát bài hát.
 
-#### Chạy bản portable bằng file zip
-
-Nếu không muốn cài đặt vào Windows:
-
-1. Tải file [DiscordLyrics.zip](https://github.com/Baor-05/Discord_Lyrics/releases/download/v1.3/DiscordLyrics.zip).
-2. Giải nén file zip.
-3. Mở thư mục vừa giải nén.
-4. Chạy `DiscordLyrics.exe`.
-
 #### Khi đóng app
 
 Khi bấm nút `X`, app không tắt hẳn mà thu nhỏ xuống khay hệ thống. Muốn thoát hoàn toàn, bấm chuột phải vào icon DiscordLyrics ở tray và chọn `Quit`.
